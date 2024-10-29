@@ -192,7 +192,6 @@ function renderProduct(product, intoCart = false, quantity = 1) {
 
 async function addToCart(id, quantity) {
   if (Array.from(cart.keys()).includes(id)) {
-    console.log("old");
     updateCartProduct(id, cart.get(id) + quantity);
     cart.set(id, cart.get(id) + quantity);
   } else {
@@ -280,7 +279,6 @@ async function restoreLocalStorage() {
     renderProduct(product, true, quantity);
   });
   inCartNumber.textContent = promises.length;
-  console.log(cart);
   if (+inCartNumber.textContent) inCartDOM.style.visibility = "visible";
 }
 
