@@ -47,6 +47,7 @@ cartProductsDOM.addEventListener("click", (e) => {
   e.stopPropagation();
   const update = e.target.closest("button");
   const card = e.target.closest(".card");
+  if (!card) return;
   const id = card.id;
   const quantity = card.querySelector(".quantity").value;
 
@@ -80,7 +81,7 @@ async function getJSON(query) {
 function suggestions(value, getSuggestions = false) {
   suggestionsContainer.innerHTML = "";
 
-  if (!value || value.length < 2) {
+  if (!value || value.length < 1) {
     suggestionsContainer.style.visibility = "hidden";
     return;
   }
@@ -191,7 +192,8 @@ function renderProduct(product, intoCart = false, quantity = 1) {
 
 async function addToCart(id, quantity) {
   if (Array.from(cart.keys()).includes(id)) {
-    updateCartProduct(id, cart.get(id));
+    console.log("old");
+    updateCartProduct(id, cart.get(id) + quantity);
     cart.set(id, cart.get(id) + quantity);
   } else {
     const [product] = await getJSON(`/products/${id}`);
