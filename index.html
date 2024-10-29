@@ -25,6 +25,37 @@
       <nav class="navbar navbar-expand-lg bg-body-tertiary bg-light pt-3">
         <div class="container">
           <a class="navbar-brand" href="#">Navbar</a>
+          <div class="nav-item dropdown cart">
+            <a class="nav-link dropdown-toggle" href="#" role="button"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              <i
+                class="fa-solid fa-cart-shopping"></i><span
+                class="in-cart">4</span>
+            </a>
+            <ul class="dropdown-menu cart-products">
+              <li>
+                <!-- <div class="card" id='${data.id}'>
+                  <div>
+                    <div class="img"
+                      style="background-image: url('${data.image}');">
+                    </div>
+                    <div class="card-body">
+                      <h4 class="card-title">${data.title}</h5>
+                      <p class="category">${data.category}</p>
+                      <p class="card-text description">
+                        ${data.description}
+                      </p>
+                    </div>
+
+                  </div>
+                  <div class='purchase'>
+                    <a href="#" class="btn btn-primary">Add to cart</a>
+                    <h5 class="total-price">${data.price}$</h5>
+                  </div>
+                </div> -->
+              </li>
+            </ul>
+          </div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
             data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -52,37 +83,7 @@
                       here</a></li>
                 </ul>
               </li>
-              <li class="nav-item dropdown cart">
-                <a class="nav-link dropdown-toggle" href="#" role="button"
-                  data-bs-toggle="dropdown" aria-expanded="false">
-                  <i
-                    class="fa-solid fa-cart-shopping"></i><span
-                    class="in-cart">4</span>
-                </a>
-                <ul class="dropdown-menu cart-products">
-                  <li>
-                    <!-- <div class="card" id='${data.id}'>
-                      <div>
-                        <div class="img"
-                          style="background-image: url('${data.image}');">
-                        </div>
-                        <div class="card-body">
-                          <h4 class="card-title">${data.title}</h5>
-                          <p class="category">${data.category}</p>
-                          <p class="card-text description">
-                            ${data.description}
-                          </p>
-                        </div>
 
-                      </div>
-                      <div class='purchase'>
-                        <a href="#" class="btn btn-primary">Add to cart</a>
-                        <h5 class="total-price">${data.price}$</h5>
-                      </div>
-                    </div> -->
-                  </li>
-                </ul>
-              </li>
             </ul>
             <form class="d-flex" role="search">
               <input class="form-control me-2 " type="search"
@@ -104,7 +105,11 @@
                 placeholder="Search" aria-label="Search">
               <button class="btn btn-outline-success search-button"
                 type="submit">Search</button>
+
             </form>
+            <div class="suggestion-container">
+              <div class="suggestions"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -114,21 +119,26 @@
       <div class="container">
         <div class="grid products">
 
-          <div class="card" id='${data.id}' data-quantity="1" data-price="100">
+          <div class="card" id='1' data-quantity="1"
+            data-price="75">
             <div>
               <div class="img"
-                style="background-image: url('${data.image}');">
+                style="background-image: url('https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg')">
               </div>
               <div class="card-body">
-                <h4 class="card-title">${data.title}</h5>
-                <p class="category">${data.category}</p>
+                <h4 class="card-title">Lorem, ipsum dolor sit amet consectetur
+                  adipisicing elit.</h5>
+                <p class="category">product category</p>
                 <p class="card-text description">
-                  ${data.description}
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Est
+                  odio tempora culpa! Sunt ea voluptatem quia enim, similique,
+                  atque est, nihil mollitia ab molestias facilis totam?
+                  Similique fugit quaerat repellat?
                 </p>
               </div>
 
             </div>
-            <div class='purchase' data-quantity="1" data-price="100">
+            <div class='purchase'>
               <a class="btn btn-primary">Add to cart</a>
               <div class="price">
                 <div class="custom-number-input">
@@ -139,7 +149,7 @@
                   <button class="increase">+</button>
                 </div>
 
-                <h5 class="total-price">100$</h5>
+                <h5 class="total-price">75 $</h5>
               </div>
             </div>
           </div>
