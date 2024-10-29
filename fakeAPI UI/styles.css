@@ -1,0 +1,245 @@
+ul.navbar-nav {
+  align-items: center;
+}
+
+li a {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 10px !important;
+  overflow: hidden;
+  max-width: calc(3 / 2 * 418px);
+}
+.container h5 {
+  margin: 0 !important;
+  display: flex;
+  width: 85px;
+  align-items: center;
+}
+.container .grid {
+  border-radius: 10px;
+  min-height: 100px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(418px, 1fr));
+  gap: 20px;
+}
+
+.card .img {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  margin: 20px 10px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+p.category {
+  color: #555;
+  font-weight: 700;
+}
+
+p.description {
+  max-height: 190px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.total-price {
+  text-wrap: nowrap;
+}
+
+div.quantity {
+  width: 90px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.purchase {
+  display: flex;
+  align-items: center;
+  padding-inline: 15px;
+  margin-bottom: 15px;
+  justify-content: flex-start;
+  gap: 30px;
+}
+a.btn {
+  width: 120px;
+  padding-block: 10px;
+  text-wrap: nowrap;
+}
+.price {
+  display: flex;
+  gap: 30px;
+}
+
+i {
+  height: 100%;
+  display: flex !important;
+  padding-left: 10px;
+  cursor: pointer;
+  align-items: center;
+  font-size: 1.4rem;
+}
+
+.cart {
+  margin-inline: 20px 40px;
+}
+
+.cart .nav-link.dropdown-toggle::after {
+  display: none;
+}
+
+.in-cart {
+  position: absolute;
+  right: -8px;
+  bottom: -5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background-color: #0d6efd;
+  color: white;
+  font-weight: 800;
+  /* box-shadow: 0 0 5px 1px rgb(0, 0, 0, 0.4); */
+  border-radius: 50%;
+}
+
+.cart-products {
+  gap: 20px;
+  top: 38px !important;
+  width: 85vw;
+  max-width: 600px;
+  height: 500px;
+  overflow-y: scroll;
+  transform: translateX(-40%);
+  padding: 0 !important;
+  border-radius: 10px !important;
+}
+
+.cart-products .card {
+  max-width: calc(100%);
+  justify-content: space-between;
+}
+
+.cart-products .card div:first-child {
+  display: flex;
+}
+.cart-products .card .img {
+  width: 150px;
+  height: 100px;
+}
+.cart-products .description,
+.cart-products a.btn {
+  display: none !important;
+}
+
+.cart-products h4 {
+  font-size: 1.2rem;
+}
+
+.cart-products .purchase {
+  justify-content: end;
+  margin-right: 30px;
+}
+
+@media (max-width: 1200px) {
+  .cart-products h4 {
+    font-size: calc((1rem + 0.3vw));
+  }
+}
+
+/* scrollbar */
+/* Width of the scrollbar */
+::-webkit-scrollbar {
+  width: 12px; /* For vertical scrollbars */
+  height: 12px; /* For horizontal scrollbars */
+}
+
+/* Track (the background of the scrollbar) */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+/* Thumb (the draggable handle) */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+/* Hover effect for the thumb */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* spinners */
+/* Hide the native spinners */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  appearance: textfield; /* For Firefox */
+}
+
+/* Style the custom number input container */
+.custom-number-input {
+  display: flex;
+  align-items: center;
+}
+
+.custom-number-input button {
+  background-color: #444;
+  border-radius: 5px;
+  color: white;
+  border: none;
+  width: 30px;
+  height: 30px;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.number-input {
+  text-align: center;
+  width: 60px;
+  font-size: 1rem;
+  margin: 0 5px;
+}
+.number-input:focus {
+  outline: unset;
+}
+
+.suggestion-container {
+  position: relative;
+}
+
+.suggestions {
+  visibility: hidden;
+  position: absolute;
+  border: 1px solid #ddd;
+  height: auto-fit;
+  max-height: 300px;
+  overflow-y: auto;
+  width: 100%;
+  background-color: white;
+  z-index: 3;
+}
+
+.suggestion-item {
+  color: #777;
+  padding: 8px;
+  cursor: pointer;
+}

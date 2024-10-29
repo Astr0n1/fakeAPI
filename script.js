@@ -153,7 +153,9 @@ async function generateProductsDOM(products, category) {
 
 function renderProduct(product, intoCart = false, quantity = 1) {
   const markup = `
-          <div class="card" id='${product.id}' data-quantity="${quantity}" data-price="${product.price}">
+          <div class="card" id='${
+            product.id
+          }' data-quantity="${quantity}" data-price="${product.price}">
             <div>
               <div class="img"
                 style="background-image: url('${product.image}');">
@@ -178,7 +180,7 @@ function renderProduct(product, intoCart = false, quantity = 1) {
                   <button class="increase">+</button>
                 </div>
 
-                <h5 class="total-price">${product.price} $</h5>
+                <h5 class="total-price">${product.price * quantity} $</h5>
               </div>
             </div>
           </div>
