@@ -174,7 +174,7 @@ function renderProduct(product, intoCart = false, quantity = 1) {
                   <button class="decrease">-</button>
                   <input type="number" class="number-input quantity" min="0"
                     max="10"
-                    value="${quantity}">
+                    value="${quantity}" disabled>
                   <button class="increase">+</button>
                 </div>
 
