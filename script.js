@@ -290,7 +290,7 @@ function setLocalStorage() {
     })
   );
   localStorage.setItem("cart", JSON.stringify(objCart));
-  restoreLocalStorage();
+  // restoreLocalStorage(false);
 }
 
 async function restoreLocalStorage() {
@@ -303,6 +303,8 @@ async function restoreLocalStorage() {
       return getJSON(`/products/${id}`);
     }
   });
+
+  // if (!render) return;
 
   promises = promises.filter((promise) => promise !== undefined);
 
