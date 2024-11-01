@@ -53,46 +53,55 @@ cartProductsDOM.addEventListener("click", (e) => {
 
   // control quantity
   if (update) {
-    updateCardQuantity(card, update.classList[0]);
+    updateCardQuantity(card, update.classList[0], true);
     if (!+card.dataset.quantity) {
       removeFromCart(id);
     }
   }
 });
 
-////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
 async function fetchStarter() {
-  const res1 = await fetch(`${API}/products/categories`);
-  categories = await res1.json();
+  try {
+    const res1 = await fetch(`${API}/products/categories`);
+    categories = await res1.json();
 
-  const res2 = await fetch(`${API}/products`);
-  allProducts = await res2.json();
+    const res2 = await fetch(`${API}/products`);
+    allProducts = await res2.json();
 
-  titles = allProducts.map((product) => [product.id, product.title]);
+    titles = allProducts.map((product) => [product.id, product.title]);
+  } catch (error) {
+    console.error("Failed to fetch data:", error);
+  }
 }
 
 async function getJSON(query) {
-  const res = await fetch(`${API}${query}`);
-  const data = await res.json();
-  if (Array.isArray(data)) return data;
-  return [data];
+  try {
+    const res = await fetch(`${API}${query}`);
+    const data = await res.json();
+    if (Array.isArray(data)) return data;
+    return [data];
+  } catch (error) {
+    console.error("Failed to fetch data:", error);
+  }
 }
 
 function suggestions(value, getSuggestions = false) {
   suggestionsContainer.innerHTML = "";
 
-  if (!value || value.length < 1) {
+  if (!value) {
     suggestionsContainer.style.visibility = "hidden";
     return;
   }
 
-  const filteredTitles = titles.filter(([id, title]) =>
-    title.toLowerCase().includes(value.toLowerCase())
-  );
-  if (getSuggestions) return filteredTitles.map(([id, title]) => title);
+  const filteredTitles = titles
+    .filter(([id, title]) => title.toLowerCase().includes(value))
+    .map(([id, title]) => title);
+
+  if (getSuggestions) return [...new Set(filteredTitles)];
 
   // Display suggestions
-  filteredTitles.forEach(([id, title]) => {
+  filteredTitles.forEach((title) => {
     const suggestionItem = document.createElement("div");
     suggestionItem.className = "suggestion-item";
     suggestionItem.textContent = title;
@@ -127,28 +136,28 @@ async function search(query) {
   category = product.category;
   generateProductsDOM([product], category);
 }
-
+//////////////////////////////////////////////////////////
 async function generateProductsDOM(products, category) {
   try {
-    let productsToRender = [],
-      promises = [];
-    products.forEach(async (product) => {
-      promises.push(getJSON(`/products/${product.id}`));
-    });
-    promises.push(getJSON(`/products/category/${category}`));
-    await Promise.all(promises).then(
-      (results) => (productsToRender = results.flat())
-    );
-    //filter duplicate
-    const uniqueProducts = [
-      ...new Map(productsToRender.map((item) => [item.id, item])).values(),
-    ];
+    // console.log("generateProductsDOM", products, category);
+    // console.log("*".repeat(50));
 
-    // update dom
+    const promises = products.map((product) =>
+      getJSON(`/products/${product.id}`)
+    );
+    promises.push(getJSON(`/products/category/${category}`));
+
+    let results = await Promise.all(promises);
+    results = results.flat();
+
+    const uniqueProducts = Array.from(
+      new Set(results.map((product) => product.id))
+    ).map((id) => results.find((product) => product.id === id));
+
     productsDOM.innerHTML = "";
     uniqueProducts.forEach((product) => renderProduct(product));
   } catch (error) {
-    console.error(error);
+    console.error("Error in generateProductsDOM:", error);
   }
 }
 
@@ -191,59 +200,84 @@ function renderProduct(product, intoCart = false, quantity = 1) {
 }
 
 async function addToCart(id, quantity) {
-  if (Array.from(cart.keys()).includes(id)) {
+  // console.log(cart, "addtocart", id, quantity);
+  // console.log("*".repeat(50));
+
+  if (cart.has(id)) {
     updateCartProduct(id, cart.get(id) + quantity);
     cart.set(id, cart.get(id) + quantity);
   } else {
     const [product] = await getJSON(`/products/${id}`);
     renderProduct(product, true, +quantity);
-    inCartNumber.textContent = +inCartNumber.textContent + 1;
+
     cart.set(id, quantity);
   }
-  if (Array.from(!cart.keys()).length)
-    inCartNumber.style.visibility = "visible";
-  else inCartNumber.style.visibility = "visible";
-
+  updateCartCount();
   setLocalStorage();
 }
 
 function removeFromCart(id) {
+  // console.log(cart, "removefromcart", id);
+  // console.log("*".repeat(50));
+
   cart.delete(id);
 
   const card = cartProductsDOM.querySelector(`[id='${id}']`);
-  cartProductsDOM.removeChild(card);
+  if (card) cartProductsDOM.removeChild(card);
 
-  inCartNumber.textContent = +inCartNumber.textContent - 1;
-  if (!+inCartNumber.textContent) inCartNumber.style.visibility = "hidden";
+  updateCartCount();
 }
 
 function updateCartProduct(id, quantity) {
+  // console.log(cart, "updatecartproduct", id, quantity);
+  // console.log("*".repeat(50));
+
   const card = cartProductsDOM.querySelector(`[id='${id}']`);
+  if (!card) return;
   card.dataset.quantity = quantity;
   card.querySelector(".quantity").value = quantity;
   card.querySelector(".total-price").textContent =
     +card.dataset.price * quantity + " $";
 }
 
-function updateCardQuantity(card, action) {
+function updateCartCount() {
+  // console.log(cart, "updatecartcount");
+  // console.log("*".repeat(50));
+
+  inCartNumber.textContent = Array.from(cart.values()).reduce(
+    (sum, num) => sum + num,
+    0
+  );
+  inCartNumber.style.visibility =
+    inCartNumber.textContent > 0 ? "visible" : "hidden";
+}
+
+function updateCardQuantity(card, action, fromCart = false) {
+  // console.log(cart, "updatecartquantity", card, action);
+  // console.log("*".repeat(50));
+
   const priceEL = card.querySelector(".total-price");
   const quantityEL = card.querySelector(".quantity");
   const ppi = +card.dataset.price;
-  if (action === "increase" && card.dataset.quantity < maxQuantity) {
-    card.dataset.quantity = +card.dataset.quantity + 1;
-    quantityEL.value = +quantityEL.value + 1;
-    priceEL.textContent =
-      Number((ppi * card.dataset.quantity).toFixed(2)) + " $";
+
+  let quantity = +card.dataset.quantity;
+  if (action === "increase" && quantity < maxQuantity) {
+    quantity += 1;
+  } else if (action === "decrease" && quantity > 0) {
+    quantity -= 1;
   }
-  if (action === "decrease" && card.dataset.quantity > 0) {
-    card.dataset.quantity = +card.dataset.quantity - 1;
-    quantityEL.value = +quantityEL.value - 1;
-    priceEL.textContent =
-      Number((ppi * card.dataset.quantity).toFixed(2)) + " $";
+
+  card.dataset.quantity = quantity;
+  quantityEL.value = quantity;
+  priceEL.textContent = (ppi * quantity).toFixed(2) + " $";
+
+  if (fromCart) {
+    cart.set(card.id, quantity);
+    updateCartCount();
+    setLocalStorage();
   }
-  cart.set(card.id, +card.dataset.quantity);
-  setLocalStorage();
 }
+
 ////////////////////////////////////////////////////////////
 function setLocalStorage() {
   const keys = Array.from(cart.keys());
@@ -256,39 +290,39 @@ function setLocalStorage() {
     })
   );
   localStorage.setItem("cart", JSON.stringify(objCart));
+  restoreLocalStorage();
 }
 
 async function restoreLocalStorage() {
-  const objCart = JSON.parse(localStorage.getItem("cart"));
-  let promises = [];
-  objCart.forEach(({ id, quantity }) => {
-    // reset cart map
-    if (quantity) {
+  const objCart = JSON.parse(localStorage.getItem("cart") || "[]");
+  if (objCart.length === 0) return;
+
+  let promises = objCart.map(({ id, quantity }) => {
+    if (quantity > 0) {
       cart.set(id, quantity);
-      promises.push(getJSON(`/products/${id}`));
+      return getJSON(`/products/${id}`);
     }
   });
 
-  let products;
-  await Promise.all(promises).then((res) => {
-    products = res;
-  });
-  products.forEach(([product]) => {
+  promises = promises.filter((promise) => promise !== undefined);
+
+  cartProductsDOM.innerHTML = "";
+  const results = await Promise.all(promises);
+  results.forEach(([product]) => {
     const quantity = cart.get(product.id + "");
-    // reset cart elements
     renderProduct(product, true, quantity);
   });
-  inCartNumber.textContent = promises.length;
-  if (+inCartNumber.textContent) inCartDOM.style.visibility = "visible";
+  updateCartCount();
 }
 
 ///////////////////////////////////////////////////////////
 function init() {
   productsDOM.innerHTML = "";
-  restoreLocalStorage();
-
+  cartProductsDOM.innerHTML = "";
   inCartNumber.textContent = 0;
   inCartNumber.style.visibility = "hidden";
+
+  restoreLocalStorage();
   fetchStarter();
 }
 init();
